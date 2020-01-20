@@ -56,7 +56,7 @@ void get_loli()
 void get_xy (int &x,int &y)
 {
 	x=r(2,Max_R-1); y=r(2,Max_C-1);
-	while(x==now_x&&y==now_y)
+	while((x==now_x&&y==now_y)||(x==10&&y==10))
 		x=r(2,Max_R-1),y=r(2,Max_C-1);
 }
 
@@ -68,7 +68,8 @@ void make_new_bie()
 		Sleep(2000);
 		return;
 	}
-	limit_bie=r(3,5);
+//	limit_bie=r(3,5);
+	limit_bie=1;
 	int x,y; get_xy(x,y);
 	cr[x][y]='B';
 	beat_bie_cnt=0;
@@ -81,11 +82,11 @@ void move()
 	if(cr[ now_x ][ now_y ]=='B')
 	{
 		cr[ now_x ][ now_y ]='$';
-		get_bieyu();
 		int r=r(1,bie_cnt-1);
 		if(beat_bie_cnt==limit_bie) r=bie_cnt;
 		saying=bie[r];
 		cout<<saying<<endl<<endl;
+		if(r==bie_cnt) system("bie_1.jpg");
 		Sleep(2000);
 		if(beat_bie_cnt<limit_bie)
 		{
@@ -96,7 +97,7 @@ void move()
 	}
 	else
 	{
-		int p=r(1,5);
+		int p=r(1,10);
 		if(p==1)
 		{
 			get_loli();
@@ -114,6 +115,8 @@ int main()
     now_x=10,now_y=10;
     get_map();
     write_map();
+    get_bieyu();
+    get_loli();
     while(1)
     {
     	int x=0,y=0;
