@@ -145,7 +145,11 @@ int main()
 		if(st[1]=='a') x=now_x,y=now_y-times;
 		if(st[1]=='s') x=now_x+times,y=now_y;
 		if(st[1]=='d') x=now_x,y=now_y+times;
-		if(st[1]=='b'&&st[2]=='i'&&st[3]=='e') make_new_bie();
+		if(st[1]=='b'&&st[2]=='i'&&st[3]=='e')
+		{
+			make_new_bie();
+			write_map();
+		}
 		if(1<x&&x<Max_R&&1<y&&y<Max_C)
 		{
 			if(cr[x][y]=='$'||cr[x][y]=='_')
