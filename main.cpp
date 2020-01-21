@@ -5,16 +5,34 @@
 
 using namespace std;
 
-const int Max_R=20;
+const int Max_R=21;
 const int Max_C=30;
+const int my_x=8;
+const int my_y=9;
+const int N=100;
 int now_x,now_y,s_len,bie_cnt,times,beat_bie_cnt,limit_bie;
-int loli_cnt;
-char cr[100][100],st[100];
-string saying,bie[100],loli[100];
+int loli_cnt,exist_bie,people_cnt;
+int peop[N][N];
+char cr[N][N],st[N];
+string saying,bie[N],loli[N];
+
+struct people
+{
+	int rate,cnt;
+	int x,y;
+	string name;
+}p[100];
 
 void get_map()
 {
 	freopen("map.in","r",stdin);
+	scanf("%d",&people_cnt);
+	for (R i=1;i<=people_cnt;++i)
+	{
+		scanf("%d %d",&p[i].x,&p[i].y);
+		peop[ p[i].x ][ p[i].y ]=i;
+		cin>>p[i].name;
+	}
     for (R i=1;i<=Max_R;++i)
         scanf("%s",cr[i]+1);
 	freopen("CON","r",stdin);
@@ -56,20 +74,20 @@ void get_loli()
 void get_xy (int &x,int &y)
 {
 	x=r(2,Max_R-1); y=r(2,Max_C-1);
-	while((x==now_x&&y==now_y)||(x==10&&y==10))
+	while((cr[x][y]=='$')||(x==my_x&&y==my_y))
 		x=r(2,Max_R-1),y=r(2,Max_C-1);
 }
 
 void make_new_bie()
 {
-	if(beat_bie_cnt!=limit_bie)
+	if(exist_bie)
 	{
 		cout<<"您还没有打完现有的这只鳖呢~"<<endl;
 		Sleep(2000);
 		return;
 	}
-//	limit_bie=r(3,5);
-	limit_bie=1;
+	exist_bie=1;
+	limit_bie=r(3,5);
 	int x,y; get_xy(x,y);
 	cr[x][y]='B';
 	beat_bie_cnt=0;
@@ -82,17 +100,17 @@ void move()
 	if(cr[ now_x ][ now_y ]=='B')
 	{
 		cr[ now_x ][ now_y ]='$';
+		beat_bie_cnt++;
 		int r=r(1,bie_cnt-1);
 		if(beat_bie_cnt==limit_bie) r=bie_cnt;
 		saying=bie[r];
 		cout<<saying<<endl<<endl;
-		if(r==bie_cnt) system("bie_1.jpg");
+		if(r==bie_cnt) system("bie_1.jpg"),exist_bie=0;
 		Sleep(2000);
 		if(beat_bie_cnt<limit_bie)
 		{
 			int x,y; get_xy(x,y);
 			cr[x][y]='B';
-			beat_bie_cnt++;
 		}
 	}
 	else
@@ -105,14 +123,14 @@ void move()
 			cout<<loli[r]<<endl;
 			cout<<"路遇loli，您只好回到座位上学习。"<<endl;
 			Sleep(2000);
-			now_x=now_y=10;
+			now_x=my_x; now_y=my_y;
 		}
 	}
 }
 
 int main()
 {
-    now_x=10,now_y=10;
+	now_x=my_x; now_y=my_y;
     get_map();
     write_map();
     get_bieyu();
@@ -129,8 +147,22 @@ int main()
 		if(st[1]=='d') x=now_x,y=now_y+times;
 		if(st[1]=='b'&&st[2]=='i'&&st[3]=='e') make_new_bie();
 		if(1<x&&x<Max_R&&1<y&&y<Max_C)
-			now_x=x,now_y=y,move();
-		write_map();
+		{
+			if(cr[x][y]=='$'||cr[x][y]=='_')
+			{
+				now_x=x,now_y=y,move();
+				write_map();
+			}
+			if(cr[x][y]=='-')
+				cout<<"不要在桌子上走."<<endl;
+			if(peop[x][y])
+				cout<<p[ peop[x][y] ].name<<":\"这是我的位置.\""<<endl; 
+		}
+		else
+		{
+			puts("再走就走出去了...");
+			Sleep(1000);
+		}
 	}
     return 0;
 }
