@@ -7,6 +7,8 @@ using namespace std;
 
 const int Max_R=21;
 const int Max_C=30;
+const int HELLO_cnt=5;
+const int Friend_rate=10;
 const int my_x=8;
 const int my_y=9;
 const int N=100;
@@ -18,9 +20,11 @@ string saying,bie[N],loli[N];
 
 struct people
 {
-	int rate,cnt;
-	int x,y;
-	string name;
+	int friendly; //友善度 
+	int x,y; //此人的位置 
+	string name; //此人的名字
+	string hello[HELLO_cnt]; //欢迎语 
+	string saying[Friend_rate]; //闲聊语 
 }p[100];
 
 void get_map()
@@ -35,6 +39,16 @@ void get_map()
 	}
     for (R i=1;i<=Max_R;++i)
         scanf("%s",cr[i]+1);
+	freopen("peop.in","r",stdin);
+	int t_cnt; scanf("%d",&t_cnt);
+	if(t_cnt!=people_cnt) puts("数据文件不兼容，请重新下载最新版本"); 
+	for (R i=1;i<=people_cnt;++i)
+	{
+		for (R j=0;j<HELLO_cnt;++j)
+			cin>>p[i].hello[j];
+		for (R j=0;j<Friend_rate;++j)
+			cin>>p[i].saying[j];
+	}
 	freopen("CON","r",stdin);
 }
 
@@ -128,6 +142,25 @@ void move()
 	}
 }
 
+void chatting (int x)
+{
+	if(p[x].friendly<=2) cout<<p[x].name<<":"<<p[x].hello[0]<<endl;
+	else if(p[x].friendly<=4) cout<<p[x].name<<":"<<p[x].hello[1]<<endl;
+	else if(p[x].friendly<=6) cout<<p[x].name<<":"<<p[x].hello[2]<<endl;
+	else if(p[x].friendly<=8) cout<<p[x].name<<":"<<p[x].hello[3]<<endl;
+	else if(p[x].friendly<=10) cout<<p[x].name<<":"<<p[x].hello[4]<<endl;
+	while(1)
+	{
+		p[x].friendly=min(p[x].friendly+1,10);
+		cout<<"输入1接着对话，输入0结束对话"<<endl;
+		char opt[10];
+		scanf("%s",opt+1);
+		if(opt[1]=='0') break;
+		cout<<p[x].name<<":"<<p[x].saying[ p[x].friendly-1 ]<<endl;
+	}
+	write_map();
+}
+
 int main()
 {
 	now_x=my_x; now_y=my_y;
@@ -160,7 +193,16 @@ int main()
 			if(cr[x][y]=='-')
 				cout<<"不要在桌子上走."<<endl;
 			if(peop[x][y])
-				cout<<p[ peop[x][y] ].name<<":\"这是我的位置.\""<<endl; 
+			{
+				cout<<"是否要进入与"<<p[ peop[x][y] ].name<<"的谈话界面？"<<endl;
+				cout<<"输入1开始与"<<p[ peop[x][y] ].name<<"谈话，输入0离开."<<endl;
+				char opt[10];
+				scanf("%s",opt+1);
+				if(opt[1]=='1')
+					chatting(peop[x][y]);
+				else
+					cout<<p[ peop[x][y] ].name<<":\"这是我的位置.\""<<endl; 
+			}
 		}
 		else
 		{
