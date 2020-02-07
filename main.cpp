@@ -48,6 +48,7 @@ void get_map()
 			cin>>p[i].hello[j];
 		for (R j=0;j<Friend_rate;++j)
 			cin>>p[i].saying[j];
+		p[i].friendly=1; 
 	}
 	freopen("CON","r",stdin);
 }
@@ -151,12 +152,12 @@ void chatting (int x)
 	else if(p[x].friendly<=10) cout<<p[x].name<<":"<<p[x].hello[4]<<endl;
 	while(1)
 	{
-		p[x].friendly=min(p[x].friendly+1,10);
 		cout<<"输入1接着对话，输入0结束对话"<<endl;
 		char opt[10];
 		scanf("%s",opt+1);
 		if(opt[1]=='0') break;
 		cout<<p[x].name<<":"<<p[x].saying[ p[x].friendly-1 ]<<endl;
+		p[x].friendly=min(p[x].friendly+1,10);
 	}
 	write_map();
 }
