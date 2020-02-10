@@ -89,7 +89,7 @@ void get_loli()
 void get_xy (int &x,int &y)
 {
 	x=r(2,Max_R-1); y=r(2,Max_C-1);
-	while((cr[x][y]=='$')||(x==my_x&&y==my_y))
+	while((cr[x][y]!='$')||(x==my_x&&y==my_y))
 		x=r(2,Max_R-1),y=r(2,Max_C-1);
 }
 
@@ -183,6 +183,7 @@ int main()
 		{
 			make_new_bie();
 			write_map();
+			continue; 
 		}
 		if(1<x&&x<Max_R&&1<y&&y<Max_C)
 		{
