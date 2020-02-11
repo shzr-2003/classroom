@@ -13,7 +13,7 @@ const int my_x=8;
 const int my_y=9;
 const int N=100;
 int now_x,now_y,s_len,bie_cnt,times,beat_bie_cnt,limit_bie;
-int loli_cnt,exist_bie,people_cnt;
+int loli_cnt,exist_bie,people_cnt,bie_x,bie_y;
 int peop[N][N];
 char cr[N][N],st[N];
 string saying,bie[N],loli[N];
@@ -89,7 +89,7 @@ void get_loli()
 void get_xy (int &x,int &y)
 {
 	x=r(2,Max_R-1); y=r(2,Max_C-1);
-	while((cr[x][y]!='$')||(x==my_x&&y==my_y))
+	while(cr[x][y]!='$')
 		x=r(2,Max_R-1),y=r(2,Max_C-1);
 }
 
@@ -106,13 +106,14 @@ void make_new_bie()
 	int x,y; get_xy(x,y);
 	cr[x][y]='B';
 	beat_bie_cnt=0;
+	bie_x=x,bie_y=y; 
 	cout<<"您创造了一只新的鳖，开始快乐地打鳖吧！"<<endl; 
 	Sleep(2000);
 }
 
 void move()
 {
-	if(cr[ now_x ][ now_y ]=='B')
+	if(now_x==bie_x&&now_y==bie_y)
 	{
 		cr[ now_x ][ now_y ]='$';
 		beat_bie_cnt++;
@@ -126,6 +127,7 @@ void move()
 		{
 			int x,y; get_xy(x,y);
 			cr[x][y]='B';
+			bie_x=x; bie_y=y;
 		}
 	}
 	else
@@ -164,6 +166,7 @@ void chatting (int x)
 
 int main()
 {
+	srand(time(0));
 	now_x=my_x; now_y=my_y;
     get_map();
     write_map();
@@ -187,23 +190,26 @@ int main()
 		}
 		if(1<x&&x<Max_R&&1<y&&y<Max_C)
 		{
-			if(cr[x][y]=='$'||cr[x][y]=='_')
-			{
-				now_x=x,now_y=y,move();
-				write_map();
-			}
 			if(cr[x][y]=='-')
 				cout<<"不要在桌子上走."<<endl;
-			if(peop[x][y])
+			else
 			{
-				cout<<"是否要进入与"<<p[ peop[x][y] ].name<<"的谈话界面？"<<endl;
-				cout<<"输入1开始与"<<p[ peop[x][y] ].name<<"谈话，输入0离开."<<endl;
-				char opt[10];
-				scanf("%s",opt+1);
-				if(opt[1]=='1')
-					chatting(peop[x][y]);
+				if(peop[x][y])
+				{
+					cout<<"是否要进入与"<<p[ peop[x][y] ].name<<"的谈话界面？"<<endl;
+					cout<<"输入1开始与"<<p[ peop[x][y] ].name<<"谈话，输入0离开."<<endl;
+					char opt[10];
+					scanf("%s",opt+1);
+					if(opt[1]=='1')
+						chatting(peop[x][y]);
+					else
+						cout<<p[ peop[x][y] ].name<<":\"这是我的位置.\""<<endl; 
+				}
 				else
-					cout<<p[ peop[x][y] ].name<<":\"这是我的位置.\""<<endl; 
+				{
+					now_x=x,now_y=y,move();
+					write_map();
+				}
 			}
 		}
 		else
